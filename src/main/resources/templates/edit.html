@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.4.1/css/all.css">
+
+
+    <link rel="stylesheet" th:href="@{/styles/index.css}">
+    <link rel="stylesheet" th:href="@{/styles/contact.css}">
+    <title>Deca Laundry</title>
+</head>
+<body>
+<header>
+    <nav>
+        <div class="logo"><a href="home">Activity Tracker<span>.</span></a></div>
+        <ul class="main-nav">
+            <li><a href="home">About</a></li>
+            <li><a href="home">Prices</a></li>
+            <li><a href="home">Top Wash</a></li>
+            <li><a href="home"> </a></li>
+            <div></div>
+            <form class="form-inline" th:action="@{/login}" th:object="${user}" >
+
+                <button style="cursor: pointer;" class="btn btn-primary" value="logout" type="submit">Log Out</button>
+            </form>
+        </ul>
+        <div class="burger-menu">
+            <span class="lines"></span>
+        </div>
+    </nav>
+</header>
+<section id="hero-contact">
+    <div class="inner-content">
+        <h2>Deca Laundry</h2>
+        <p>Professional
+            Drycleaning & Laundry
+            Service</p>
+    </div>
+    </div>
+</section>
+
+<!-- form section -->
+<section class="contact-form">
+    <div class="contacts">
+        <div class="address">
+            <h1>Address</h1>
+            <div class="icon-group">
+                <p><i class="fa fa-map-marker" aria-hidden="true"></i></p>
+                <p>7, Sangotedo Ajah, <br> Lagos</p>
+            </div>
+        </div>
+        <div class="phone">
+            <h1>Phone</h1>
+            <div class="icon-group">
+                <p><i class="fa fa-phone" aria-hidden="true"></i></p>
+                <div>
+                    <p>+234-444-444-444</p>
+                    <p>+234-444-444-444</p>
+                </div>
+            </div>
+        </div>
+        <div class="email">
+            <h1>Email</h1>
+            <div class="icon-group">
+                <p><i class="fa fa-envelope-o" aria-hidden="true"></i></p>
+                <p>zurum@decagon.com</p>
+            </div>
+        </div>
+    </div>
+
+    <hr id="divider"/>
+
+    <form action="#" th:action="@{/editTask}" th:object="${editTask}" method="post">
+        <input type="text" th:field="*{title}"  placeholder="Title">
+        <input type="text" th:field="*{description}"  placeholder="Description">
+        <label class="input-group" for="service">Change Status:</label>
+        <select style="padding: .9em" class="input-group form-input" autofocus="autofocus" th:field="*{status}" id="service" name="service">
+            <option value="PENDING">Pending</option>
+            <option value="IN PROGRESS">In Progress</option>
+            <option value="COMPLETED">Completed</option>
+        </select>
+        <input type="submit">
+    </form>
+
+
+</section>
+
+<section id="sub-footer">
+    <div class="background-overlay">
+        <div class="inner-content">
+            <h2>You want to do it? We help you track it.
+            </h2>
+            <p>
+                Welcome to your Activity Tracker - your one-stop Personal Tracker
+                <button href="home">Track Now</button>
+
+        </div>
+    </div>
+</section>
+
+<footer>
+    <div class="inner-content">
+        <hr />
+        <div class="major-footer">
+            <p class="footer-logo">Activity Tracker</p>
+            <p class="copyright">&copy; BCTech. 2023 All Rights Reserved</p>
+
+        </div>
+    </div>
+</footer>
+
+</body>
+</html>
