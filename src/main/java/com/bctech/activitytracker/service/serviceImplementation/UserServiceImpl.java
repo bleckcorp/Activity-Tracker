@@ -23,7 +23,7 @@ public class UserServiceImpl implements UserService {
 
     //    implementation of validating users details
     @Override
-    public UserDto validateUser(String email, String password) {
+    public UserDto validateUser(String email, String password) throws CustomException{
         log.info("service:: about to validate user login :: {}", email);
         Optional<User> isUserPresent = userRepository.findUserByEmailAndPassword(email,password);
 

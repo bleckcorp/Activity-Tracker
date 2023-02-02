@@ -4,13 +4,6 @@ import lombok.*;
 
 import java.io.Serializable;
 
-/**
- * Project title: unit-testing
- *
- * @author johnadeshola
- * Date: 9/6/21
- * Time: 5:03 PM
- */
 @Getter
 @Setter
 @NoArgsConstructor

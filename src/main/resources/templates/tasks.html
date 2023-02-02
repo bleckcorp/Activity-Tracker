@@ -18,12 +18,12 @@
     <nav>
         <div class="logo"><a href="home">Activity Tracker<span>.</span></a></div>
         <ul class="main-nav">
-            <li><a href="home">About</a></li>
-            <li><a href="home">Prices</a></li>
-            <li><a href="home">Top Wash</a></li>
+            <li><a th:href="@{/viewPendingTasks}">Pending Tasks</a></li>
+            <li><a th:href="@{/viewTasksInProgress}">Tasks in Progress</a></li>
+            <li><a th:href="@{/viewCompletedTasks}">Completed Tasks</a></li>
             <li><a href="home"> </a></li>
             <div></div>
-            <form class="form-inline" th:action="@{/login}" th:object="${newUser}" >
+            <form class="form-inline" th:action="@{/logout}" th:object="${newUser}" >
 
                 <button style="cursor: pointer;" class="btn btn-primary" value="logout" type="submit">Log Out</button>
             </form>
@@ -37,6 +37,9 @@
     <div class="inner-content">
         <h2>Activity Tracker</h2>
         <p>Personal Activity planner</p>
+        <h1 class="mb-4 text-center">
+            <h6 class="alert-success text-center" th:text="${message}"></h6>
+        </h1>
     </div>
     </div>
 </section>
@@ -45,10 +48,10 @@
 <section class="contact-form">
     <div class="contacts">
         <div class="address">
-            <h1>Address</h1>
+            <h1>Name</h1>
             <div class="icon-group">
                 <p><i class="fa fa-map-marker" aria-hidden="true"></i></p>
-                <p>7, Sangotedo Ajah, <br> Lagos</p>
+                <p th:text="${session.currentUser.getFullName()}"></p>
             </div>
         </div>
         <div class="phone">
@@ -56,8 +59,7 @@
             <div class="icon-group">
                 <p><i class="fa fa-phone" aria-hidden="true"></i></p>
                 <div>
-                    <p>+234-444-444-444</p>
-                    <p>+234-444-444-444</p>
+                    <p th:text="${session.currentUser.getPhoneNumber()}"></p>
                 </div>
             </div>
         </div>
@@ -65,9 +67,13 @@
             <h1>Email</h1>
             <div class="icon-group">
                 <p><i class="fa fa-envelope-o" aria-hidden="true"></i></p>
-                <p>zurum@decagon.com</p>
+                <p th:text="${session.currentUser.getEmail()}"></p>
             </div>
         </div>
+        <a th:href="@{/viewTasks}"><button>View All Tasks</button></a>
+        <a th:href="@{/viewCompletedTasks}"><button>View Completed Tasks</button></a>
+        <a th:href="@{/viewPendingTasks}"><button>View Pending Tasks</button></a>
+        <a th:href="@{/viewTasksInProgress}"><button>View Tasks in progress</button></a>
     </div>
 
     <hr id="divider"/>
@@ -116,7 +122,7 @@
             </h2>
             <p>
                 Welcome to your Activity Tracker - your one-stop Personal Tracker
-                <button href="home">Track Now</button>
+                <button th:href="@{/login}">Track Now</button>
 
         </div>
     </div>

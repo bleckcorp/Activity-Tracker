@@ -16,7 +16,9 @@ public interface TaskService {
     //    method signature for handling the fetching of our datas
     List<TaskDto> getAllTasksOfUser(UserDto user);
 
-    List<TaskDto> getAllTasksOfUserAccordingToStatus(UserDto user, String status);
+
+    List<TaskDto> getAllTasksOfUserAccordingToCategory(UserDto user, String status);
+
     //    method signature for deleting a specific post
     Boolean deleteTask(Long id);
 

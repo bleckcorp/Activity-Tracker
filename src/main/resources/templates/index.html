@@ -16,6 +16,10 @@
 
 <body >
 
+<h1 class="mb-4 text-center">
+    <h6 class="alert-success text-center" th:text="${message}"></h6>
+</h1>
+
 <nav class="navbar navbar-light bg-success mb-5">
     <a style="color: white;" class="navbar-brand">Activity Tracker</a>
     <form class="form-inline" th:action="@{/login}" th:object="${user}" >

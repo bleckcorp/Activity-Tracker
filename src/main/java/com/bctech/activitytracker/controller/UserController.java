@@ -10,14 +10,12 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.validation.Valid;
 
-// User controller class that handles customers and launderer's details
+// User controller class that handles customers details
 @Controller
 @Slf4j
 @RequiredArgsConstructor
@@ -34,17 +32,26 @@ public class UserController {
 
 // Method handler that adds users details to database and redirects users to login
     @PostMapping("/register")
-    public String registerUser(@Valid @ModelAttribute("newUser") UserRequestDTO user, BindingResult result) {
+    public String registerUser(@Valid @ModelAttribute("newUser") UserRequestDTO user, BindingResult result, RedirectAttributes redirectAttributes,
+                               Model model) {
         if(result.hasErrors()){
             return "index";
         }
-       userService.createUser(user);
-        return "redirect:/login";
+        try { userService.createUser(user);
+            return "redirect:/login";
+        } catch (Exception e) {
+            e.printStackTrace();
+            redirectAttributes.addFlashAttribute("message", e.getMessage());
+            model.addAttribute("message", e.getMessage());
+            return "index";
+
+        }
     }
 
 //    Sends login view page
     @GetMapping("/login")
     public String showLogin(){
+
         return "login";
     }
 
@@ -52,13 +59,19 @@ public class UserController {
     @PostMapping("/login")
     public String login(@RequestParam("username") String username,
                         @RequestParam("password") String password,
+                        RedirectAttributes redirectAttributes,
+                        Model model,
                         HttpSession session) {
-        UserDto user = userService.validateUser(username, password);
-        if (user == null) {
-            return "redirect:/login";
+
+        try {
+            UserDto user = userService.validateUser(username, password);
+            session.setAttribute("currentUser", user);
+            return "redirect:/home";
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("message", e.getMessage());
+            model.addAttribute("message", e.getMessage());
+            return "login";
         }
-        session.setAttribute("currentUser", user);
-        return "redirect:/home";
     }
 
 //    method handler that add TaskDTo data to the model and redirects to home
@@ -66,6 +79,12 @@ public class UserController {
     public String showHome(TaskDto task, Model model) {
         model.addAttribute("taskDto", task);
         return "home";
+    }
+
+    @GetMapping("/logout")
+    public String logoutUser(HttpSession session ) {
+        session.invalidate();
+        return "redirect:/login";
     }
 
 }

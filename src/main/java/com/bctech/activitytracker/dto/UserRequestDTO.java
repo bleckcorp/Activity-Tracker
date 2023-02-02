@@ -4,6 +4,7 @@ import lombok.*;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Size;
 
 
@@ -20,17 +21,17 @@ import javax.validation.constraints.Size;
  */
 public class UserRequestDTO {
 
-    @NotBlank(message = "Full name is required")
+    @NotEmpty(message = "Full name is required")
     private String fullName;
 
-
-    @NotBlank (message = "Phone number is required")
+    @NotEmpty (message = "Phone number is required")
     @Size(min = 11, max = 11)
     private String phoneNumber;
 
-    @NotBlank(message = "A password is required")
+    @NotEmpty(message = "A password is required")
     private String password;
 
+    @NotEmpty(message = "A valid Email is required")
     @Email(message = "A valid Email is required")
     private String email;
 }

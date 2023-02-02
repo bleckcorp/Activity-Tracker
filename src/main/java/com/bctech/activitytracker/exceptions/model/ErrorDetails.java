@@ -9,13 +9,7 @@ import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.List;
 
-/**
- * Project title: unit-testing
- *
- * @author johnadeshola
- * Date: 9/6/21
- * Time: 5:02 PM
- */
+
 @Setter
 @Getter
 @NoArgsConstructor

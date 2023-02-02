@@ -4,13 +4,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.springframework.http.HttpStatus;
 
-/**
- * Project title: unit-testing
- *
- * @author johnadeshola
- * Date: 9/6/21
- * Time: 4:19 PM
- */
+
 @NoArgsConstructor
 @Getter
 public class CustomException extends RuntimeException {

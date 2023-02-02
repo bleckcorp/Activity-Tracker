@@ -73,9 +73,8 @@ public class TaskServiceImpl implements TaskService {
         log.info("service:: about to get all tasks of user :: {}", user.getId());
         List<Task> tasks = taskRepository.findAllByUserId(user.getId());
         if (tasks.isEmpty()) {
-            return null;
+            throw new CustomException("No tasks found", HttpStatus.NOT_FOUND);
         }
-//            throw new CustomException("No tasks found for user", HttpStatus.NOT_FOUND);
         DateTimeFormatter format = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm");
 
         return tasks.stream().map(task ->
@@ -93,16 +92,21 @@ public class TaskServiceImpl implements TaskService {
     }
 
     @Override
-    public List<TaskDto> getAllTasksOfUserAccordingToStatus(UserDto user, String status) {
+    public List<TaskDto> getAllTasksOfUserAccordingToCategory(UserDto user, String status) {
         log.info("service:: about to get all tasks by status for user :: {}", user.getId());
         List<Task> tasks = taskRepository.findAllByUserIdAndStatus(user.getId(), status);
         if (tasks.isEmpty()) {
-            throw new CustomException("No tasks found for this category", HttpStatus.NOT_FOUND);
+            throw new CustomException("No tasks found", HttpStatus.NOT_FOUND);
         }
+//            throw new CustomException("No tasks found for this category", HttpStatus.NOT_FOUND);
+        DateTimeFormatter format = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm");
 
         return tasks.stream().map(task -> TaskDto.builder()
                 .taskId(task.getTaskId())
                 .title(task.getTitle())
+                .completedAt(task.getCompletedAt() != null ? task.getCompletedAt().format(format) : "NOT SET")
+                .updatedAt(task.getUpdatedAt() != null ? task.getUpdatedAt().format(format) : "NOT SET")
+                .createdAt(task.getCreatedAt() != null ? task.getCreatedAt().format(format) : "NOT SET")
                 .description(task.getDescription())
                 .status(task.getStatus())
                 .build()).toList();
