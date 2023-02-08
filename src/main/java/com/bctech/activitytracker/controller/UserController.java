@@ -32,7 +32,7 @@ public class UserController {
 
 // Method handler that adds users details to database and redirects users to login
     @PostMapping("/register")
-    public String registerUser(@Valid @ModelAttribute("newUser") UserRequestDTO user, BindingResult result, RedirectAttributes redirectAttributes,
+    public String registerUser(@Valid@ModelAttribute("newUser") UserRequestDTO user, BindingResult result, RedirectAttributes redirectAttributes,
                                Model model) {
         if(result.hasErrors()){
             return "index";
@@ -76,7 +76,11 @@ public class UserController {
 
 //    method handler that add TaskDTo data to the model and redirects to home
     @GetMapping("/home")
-    public String showHome(TaskDto task, Model model) {
+    public String showHome(TaskDto task, Model model, HttpSession session) {
+        UserDto user = (UserDto) session.getAttribute("currentUser");
+        if (user == null) {
+            return "redirect:/login";
+        }
         model.addAttribute("taskDto", task);
         return "home";
     }

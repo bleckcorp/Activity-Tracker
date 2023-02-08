@@ -76,7 +76,9 @@
     <hr id="divider"/>
 
     <form action="#" th:action="@{/editTask}" th:object="${editTask}" method="post">
+        <label class="input-group" for="service">Change Title:</label>
         <input type="text" th:field="*{title}"  th:placeholder="${editTask.title}" required>
+        <label class="input-group" for="service">Change Description:</label>
         <input type="text" th:field="*{description}"  th:placeholder="${editTask.description}" required>
         <label class="input-group" for="service">Change Status:</label>
         <select style="padding: .9em" class="input-group form-input" autofocus="autofocus" th:field="*{status}" id="service" name="service">

@@ -52,7 +52,7 @@ public class UserServiceImpl implements UserService {
         // IF no exception is thrown, then we can save the user
         User user = User.builder()
                 .email(request.getEmail())
-                .fullName(request.getPhoneNumber())
+                .fullName(request.getFullName())
                 .phoneNumber(request.getPhoneNumber())
                 .password(request.getPassword())
                 .build();

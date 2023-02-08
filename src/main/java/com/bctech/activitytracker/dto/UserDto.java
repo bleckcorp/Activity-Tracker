@@ -5,6 +5,8 @@ import com.bctech.activitytracker.model.Task;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.OneToMany;
 import lombok.*;
+import org.springframework.context.annotation.Bean;
+import org.springframework.stereotype.Component;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
@@ -18,6 +20,7 @@ import java.util.List;
 @ToString
 @NoArgsConstructor
 @AllArgsConstructor
+@Component
 public class UserDto {
 
     private Long id;

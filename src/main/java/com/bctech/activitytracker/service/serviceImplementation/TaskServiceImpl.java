@@ -29,7 +29,7 @@ public class TaskServiceImpl implements TaskService {
     private final UserRepository userRepository;
 
     @Override
-    public Long saveTask(TaskDto taskRequest, Long userId) {
+    public Task saveTask(TaskDto taskRequest, Long userId) {
         log.info("service:: about to save task with task title :: {}", taskRequest.getTitle());
 
         User user = userRepository.findById(userId).orElseThrow(() -> {
@@ -46,20 +46,21 @@ public class TaskServiceImpl implements TaskService {
 
         taskRepository.save(task);
 
-        return task.getTaskId();
+        return task;
     }
 
     @Override
-    public Long updateTask(TaskDto taskRequest) {
+    public Long updateTask(TaskDto taskRequest, UserDto user) {
         log.info("service:: about to update task with task title :: {}", taskRequest.getTitle());
         Long id = taskRequest.getTaskId();
-        Task task = taskRepository.findById(id).orElseThrow(() -> {
-            throw new CustomException("Task detail cannot be found", HttpStatus.NOT_FOUND);
+        Task task = taskRepository.findByTaskIdAndUserId(id, user.getId()).orElseThrow(() -> {
+            throw new CustomException("Task do not exist or you dont have permission", HttpStatus.NOT_FOUND);
         });
         // update task completed timestamp if task status is completed
         if (taskRequest.getStatus().equals("COMPLETED")) {
             task.setCompletedAt(LocalDateTime.now());
         }
+        task.setUpdatedAt(LocalDateTime.now());
         task.setTitle(taskRequest.getTitle());
         task.setDescription(taskRequest.getDescription());
         task.setStatus(taskRequest.getStatus());
@@ -75,21 +76,12 @@ public class TaskServiceImpl implements TaskService {
         if (tasks.isEmpty()) {
             throw new CustomException("No tasks found", HttpStatus.NOT_FOUND);
         }
-        DateTimeFormatter format = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm");
-
-        return tasks.stream().map(task ->
-                TaskDto.builder()
-                        .taskId(task.getTaskId())
-                        .title(task.getTitle())
-                        .description(task.getDescription())
-                        .completedAt(task.getCompletedAt() != null ? task.getCompletedAt().format(format) : "NOT SET")
-                        .updatedAt(task.getUpdatedAt() != null ? task.getUpdatedAt().format(format) : "NOT SET")
-                        .createdAt(task.getCreatedAt() != null ? task.getCreatedAt().format(format) : "NOT SET")
-                        .status(task.getStatus())
-                        .build()).toList();
+        return convertListOfTasksToDtos(tasks);
 
 
     }
+
+
 
     @Override
     public List<TaskDto> getAllTasksOfUserAccordingToCategory(UserDto user, String status) {
@@ -98,24 +90,13 @@ public class TaskServiceImpl implements TaskService {
         if (tasks.isEmpty()) {
             throw new CustomException("No tasks found", HttpStatus.NOT_FOUND);
         }
-//            throw new CustomException("No tasks found for this category", HttpStatus.NOT_FOUND);
-        DateTimeFormatter format = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm");
-
-        return tasks.stream().map(task -> TaskDto.builder()
-                .taskId(task.getTaskId())
-                .title(task.getTitle())
-                .completedAt(task.getCompletedAt() != null ? task.getCompletedAt().format(format) : "NOT SET")
-                .updatedAt(task.getUpdatedAt() != null ? task.getUpdatedAt().format(format) : "NOT SET")
-                .createdAt(task.getCreatedAt() != null ? task.getCreatedAt().format(format) : "NOT SET")
-                .description(task.getDescription())
-                .status(task.getStatus())
-                .build()).toList();
+        return convertListOfTasksToDtos(tasks);
     }
 
     @Override
-    public Boolean deleteTask(Long id) {
-        Task task = taskRepository.findById(id).orElseThrow(() -> {
-            throw new CustomException("Task detail cannot be found", HttpStatus.NOT_FOUND);
+    public Boolean deleteTask(Long taskId, UserDto user) {
+        Task task = taskRepository.findByTaskIdAndUserId(taskId, user.getId()).orElseThrow(() -> {
+            throw new CustomException("Task cannot be deleted", HttpStatus.NOT_FOUND);
         });
         taskRepository.delete(task);
         return true;
@@ -134,5 +115,18 @@ public class TaskServiceImpl implements TaskService {
                 .build();
     }
 
+    private static List<TaskDto> convertListOfTasksToDtos(List<Task> tasks) {
+        DateTimeFormatter format = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm");
 
+        return tasks.stream().map(task ->
+                TaskDto.builder()
+                        .taskId(task.getTaskId())
+                        .title(task.getTitle())
+                        .description(task.getDescription())
+                        .completedAt(task.getCompletedAt() != null ? task.getCompletedAt().format(format) : "NOT COMPLETED")
+                        .updatedAt(task.getUpdatedAt() != null ? task.getUpdatedAt().format(format) : "NOT UPDATED")
+                        .createdAt(task.getCreatedAt() != null ? task.getCreatedAt().format(format) : "NOT SET")
+                        .status(task.getStatus())
+                        .build()).toList();
+    }
 }

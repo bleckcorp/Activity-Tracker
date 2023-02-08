@@ -32,7 +32,11 @@ public class TaskController {
 
 //    Method handler retrieves all data from table and adds it to a model
     @GetMapping("/viewTasks")
-    public String viewAllPost( RedirectAttributes redirectAttributes, Model model, @SessionAttribute("currentUser") UserDto user){
+    public String viewAllPost( RedirectAttributes redirectAttributes, Model model, HttpSession session){
+       UserDto user = (UserDto) session.getAttribute("currentUser");
+        if (user == null) {
+            return "redirect:/login";
+        }
         try {
 
             List<TaskDto>  allTasks = taskService.getAllTasksOfUser(user);
@@ -67,8 +71,9 @@ public class TaskController {
 
 // Method handle enables user to delete specific task
     @GetMapping("/delete/{id}")
-    public String deleteTask(@PathVariable("id") Long id){
-        taskService.deleteTask(id);
+    public String deleteTask(@PathVariable("id") Long id, HttpSession session){
+        UserDto user = (UserDto) session.getAttribute("currentUser");
+        taskService.deleteTask(id, user);
         return "redirect:/viewTasks";
     }
 
@@ -83,13 +88,13 @@ public class TaskController {
 
 // Method handler for saving back edited post
     @PostMapping("/editTask")
-    public String updateTask(@Valid @ModelAttribute ("editTask") TaskDto task, @SessionAttribute("task") Long id) {
+    public String updateTask(@Valid @ModelAttribute ("editTask") TaskDto task, @SessionAttribute("task") Long id, HttpSession session){
+        UserDto user = (UserDto) session.getAttribute("currentUser");
         task.setTaskId(id);
-        taskService.updateTask(task);
+        taskService.updateTask(task, user);
         return "redirect:/viewTasks";
     }
 
-    //TODO : MOVE TO TASK SERVICE
     private String getTasksAccordingToCategory(RedirectAttributes redirectAttributes, Model model, @SessionAttribute("currentUser") UserDto user, String category) {
         try {
 

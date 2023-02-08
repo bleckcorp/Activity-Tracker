@@ -3,6 +3,7 @@ package com.bctech.activitytracker.model;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.Hibernate;
+import org.springframework.stereotype.Component;
 
 import javax.validation.constraints.Size;
 import java.util.List;
@@ -12,6 +13,7 @@ import java.util.Objects;
 @Setter
 @ToString
 @NoArgsConstructor
+@Component
 @AllArgsConstructor
 @Entity(name = "users")
 public class User {
